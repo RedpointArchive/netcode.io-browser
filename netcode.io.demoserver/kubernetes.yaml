@@ -98,3 +98,15 @@ spec:
         - name: tmp-volume
           emptyDir:
             medium: Memory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netcode-http
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: netcode-io-demo-server-http
