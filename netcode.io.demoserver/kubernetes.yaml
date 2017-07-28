@@ -1,0 +1,100 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: netcode-io-demo-server-http
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: netcode-io-demo-server-http
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: high-availability-pool
+      securityContext:
+        runAsNonRoot: true
+      automountServiceAccountToken: false
+      containers:
+      - name: netcode-io-demo-server-http
+        image: redpointgames/netcode-demo-server:latest
+        args: [ "--non-interactive", "--listen-address", "0.0.0.0", "--server-address", "104.198.44.162" ]
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 33
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          requests:
+            cpu: 0m
+            memory: 50Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - mountPath: /tmp
+            name: tmp-volume
+      volumes:
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: netcode-io-demo-server-udp
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: netcode-io-demo-server-udp
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: high-availability-pool
+      securityContext:
+        runAsNonRoot: true
+      automountServiceAccountToken: false
+      hostNetwork: true
+      containers:
+      - name: netcode-io-demo-server-udp
+        image: redpointgames/netcode-demo-server:latest
+        args: [ "--non-interactive", "--listen-address", "0.0.0.0", "--server-address", "104.198.44.162" ]
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 33
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          requests:
+            cpu: 0m
+            memory: 50Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 40000
+        volumeMounts:
+          - mountPath: /tmp
+            name: tmp-volume
+      volumes:
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory

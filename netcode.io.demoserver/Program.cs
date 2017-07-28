@@ -22,21 +22,47 @@ namespace netcode.io.demoserver
 
         static bool running = true;
 
+        static string listenAddress = "[::]";
+
+        static string serverAddress = "[::1]";
+
         static void Main(string[] args)
         {
+            var nonInteractive = false;
+            for (var i = 0; i < args.Length; i++)
+            {
+                if (args[i] == "--non-interactive")
+                {
+                    nonInteractive = true;
+                }
+                else if (args[i] == "--listen-address")
+                {
+                    listenAddress = args[i + 1];
+                    i++;
+                }
+                else if (args[i] == "--server-address")
+                {
+                    serverAddress = args[i + 1];
+                    i++;
+                }
+            }
+            
             // Start web server.
-            WebServer ws = new WebServer(SendResponse, "http://localhost:8080/");
+            WebServer ws = new WebServer(SendResponse, "http://*:8080/");
             ws.Run();
 
             // Run netcode.io server in another thread.
             var netcodeThread = new Thread(NetcodeServer);
-            netcodeThread.IsBackground = true;
+            netcodeThread.IsBackground = !nonInteractive;
             netcodeThread.Start();
 
-            Console.WriteLine("netcode.io demo server started, open up http://localhost:8080/ to try it!");
-            Console.ReadKey();
-            running = false;
-            ws.Stop();
+            Console.WriteLine("netcode.io demo server started, open up http://*:8080/ to try it!");
+            if (!nonInteractive)
+            {
+                Console.ReadKey();
+                running = false;
+                ws.Stop();
+            }
         }
 
         private static void NetcodeServer()
@@ -47,8 +73,8 @@ namespace netcode.io.demoserver
             double deltaTime = 1.0 / 60.0;
 
             var server = new Server(
-                "[::]:40000",
-                "[::1]:40000", 
+                listenAddress + ":40000",
+                serverAddress + ":40000", 
                 0x1122334455667788L, 
                 _privateKey,
                 0);
@@ -106,7 +132,7 @@ namespace netcode.io.demoserver
             {
                 var clientId = ulong.Parse(request.QueryString["clientId"]);
                 var token = NetcodeLibrary.GenerateConnectTokenFromPrivateKey(
-                    new[] { "[::1]:40000" },
+                    new[] { serverAddress + ":40000" },
                     30,
                     clientId,
                     0x1122334455667788L,
