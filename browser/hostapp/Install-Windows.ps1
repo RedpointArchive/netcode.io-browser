@@ -8,7 +8,8 @@ $ManifestJson = @{
   path = $HostPath.Path;
   type = "stdio";
   allowed_origins = @(
-    "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/"
+    "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/",
+    "chrome-extension://hpecmifakhimhidjpcpjmihpacijicbd/"
   )
 }
 ConvertTo-Json $ManifestJson | Out-File -Encoding UTF8 $ManifestJsonPath

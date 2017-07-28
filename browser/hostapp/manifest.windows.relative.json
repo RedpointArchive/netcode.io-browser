@@ -1,0 +1,9 @@
+﻿{
+    "path":  "netcode.io.host.exe",
+    "description":  "netcode.io helper",
+    "name":  "netcode.io",
+    "allowed_origins":  [
+                            "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/"
+                        ],
+    "type":  "stdio"
+}
