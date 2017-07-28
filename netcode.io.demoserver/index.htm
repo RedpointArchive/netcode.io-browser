@@ -69,7 +69,7 @@
                             });
                             window.setTimeout(function () { updateConnectionState(client); }, 100);
                             $("#netcode_client").text("Created, obtaining token...");
-                            $.get("/token?clientId=1", function (token) {
+                            $.get("/token", function (token) {
                                 $("#netcode_client").text("Obtained token, connecting...");
                                 var tokenBuffer = b64ToBuffer(token);
                                 client.connect(tokenBuffer, function (err) {

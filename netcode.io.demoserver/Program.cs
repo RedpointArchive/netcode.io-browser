@@ -133,8 +133,8 @@ namespace netcode.io.demoserver
             if (request.Url.AbsolutePath == "/token")
             {
                 response.ContentType = "text/plain";
-
-                var clientId = ulong.Parse(request.QueryString["clientId"]);
+                
+                var clientId = NetcodeLibrary.GetRandomUInt64();
                 var token = NetcodeLibrary.GenerateConnectTokenFromPrivateKey(
                     new[] { serverAddress + ":40000" },
                     30,
