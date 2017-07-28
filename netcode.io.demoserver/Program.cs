@@ -116,10 +116,12 @@ namespace netcode.io.demoserver
             server.Dispose();
         }
 
-        public static string SendResponse(HttpListenerRequest request)
+        public static string SendResponse(HttpListenerRequest request, HttpListenerResponse response)
         {
             if (request.Url.AbsolutePath == "/")
             {
+                response.ContentType = "text/html";
+
                 var asmPath = Assembly.GetExecutingAssembly().Location;
                 var indexPath = Path.Combine(new FileInfo(asmPath).DirectoryName, "index.htm");
                 using (var reader = new StreamReader(indexPath))
@@ -130,6 +132,8 @@ namespace netcode.io.demoserver
 
             if (request.Url.AbsolutePath == "/token")
             {
+                response.ContentType = "text/plain";
+
                 var clientId = ulong.Parse(request.QueryString["clientId"]);
                 var token = NetcodeLibrary.GenerateConnectTokenFromPrivateKey(
                     new[] { serverAddress + ":40000" },

@@ -9,9 +9,9 @@ namespace netcode.io.demoserver
     public class WebServer
     {
         private readonly HttpListener _listener = new HttpListener();
-        private readonly Func<HttpListenerRequest, string> _responderMethod;
+        private readonly Func<HttpListenerRequest, HttpListenerResponse, string> _responderMethod;
 
-        public WebServer(string[] prefixes, Func<HttpListenerRequest, string> method)
+        public WebServer(string[] prefixes, Func<HttpListenerRequest, HttpListenerResponse, string> method)
         {
             if (!HttpListener.IsSupported)
                 throw new NotSupportedException(
@@ -33,7 +33,7 @@ namespace netcode.io.demoserver
             _listener.Start();
         }
 
-        public WebServer(Func<HttpListenerRequest, string> method, params string[] prefixes)
+        public WebServer(Func<HttpListenerRequest, HttpListenerResponse, string> method, params string[] prefixes)
             : this(prefixes, method) { }
 
         public void Run()
@@ -50,7 +50,7 @@ namespace netcode.io.demoserver
                             var ctx = c as HttpListenerContext;
                             try
                             {
-                                string rstr = _responderMethod(ctx.Request);
+                                string rstr = _responderMethod(ctx.Request, ctx.Response);
                                 byte[] buf = Encoding.UTF8.GetBytes(rstr);
                                 ctx.Response.ContentLength64 = buf.Length;
                                 ctx.Response.OutputStream.Write(buf, 0, buf.Length);
