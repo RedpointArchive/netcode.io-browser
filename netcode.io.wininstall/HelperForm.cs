@@ -54,7 +54,7 @@ namespace netcode.io.wininstall
                     .CreateSubKey("Chrome")
                     .CreateSubKey("NativeMessagingHosts")
                     .CreateSubKey("netcode.io");
-                registryKey.SetValue("(Default)", Path.Combine(netcodePath, "manifest.windows.relative.json"));
+                registryKey.SetValue(null, Path.Combine(netcodePath, "manifest.windows.relative.json"));
 
                 Thread.Sleep(1000);
             }

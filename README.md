@@ -35,6 +35,15 @@ Creates a new netcode.io client which can be used for secure UDP communication u
 **Parameters:**
 - `callback`: A callback in the form `callback(err, client)` where `err` is either `null` or an instance of `Error`, and `client` is either `null` or an instance of `Client`.
 
+### window.netcode.isNativeHelperInstalled(callback)
+
+Checks to see if the netcode.io helper has been installed by the user. The callback is of the form `callback(err, isPresent)`, where `err` is either `null` or an instance of `Error`. If there is no error, `isPresent` is a boolean indicating whether the native helper has been installed.
+
+If the netcode.io helper has not been installed, you should direct the user to [https://github.com/RedpointGames/netcode.io-browser/releases/tag/latest](https://github.com/RedpointGames/netcode.io-browser/releases/tag/latest) where the netcode.io helper can be easily installed in a few clicks.
+
+**Parameters:**
+- `callback`: A callback in the form `callback(err, isPresent)` where `err` is either `null` or an instance of `Error`, and `isPresent` is either `null` or a boolean.
+
 ### Client.setTickRate(tickRate, callback)
 
 Sets the tick rate of the netcode.io client, expressed as the number of ticks per second for receiving and sending packets.  The tick rate for clients defaults to `60`; that is, 60 times a second.

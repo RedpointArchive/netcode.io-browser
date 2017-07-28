@@ -6,6 +6,7 @@ var _typeReceivePacket = 105;
 var _typeGetClientState = 106;
 var _typeDestroyClient = 107;
 var _typeClientDestroyed = 108;
+var _typeCheckPresence = 109;
 var _resultClientCreated = 201;
 var _resultSuccess = 202;
 var _resultError = 203;
@@ -116,6 +117,23 @@ var bufferToB64 = function(buffer) {
 }
 
 window.netcode = {
+  isNativeHelperInstalled: function(callback) {
+    var handle = window.setTimeout(function() {
+      callback(null, false);
+    }, 2000);
+    var messageId = _createMessage(function(type, args) {
+      window.clearTimeout(handle);
+      if (type == _resultSuccess) {
+        callback(null, true);
+      } else {
+        callback(new Error(args[0]), null);
+      }
+    });
+    window.postMessage({
+      type: "netcode.io-send",
+      message: [_typeCheckPresence, messageId]
+    }, "*");
+  },
   createClient: function(callback) {
     var messageId = _createMessage(function(type, args) {
       if (type == _resultClientCreated) {

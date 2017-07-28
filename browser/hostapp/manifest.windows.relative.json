@@ -3,7 +3,8 @@
     "description":  "netcode.io helper",
     "name":  "netcode.io",
     "allowed_origins":  [
-                            "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/"
+                            "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/",
+                            "chrome-extension://hpecmifakhimhidjpcpjmihpacijicbd/"
                         ],
     "type":  "stdio"
 }

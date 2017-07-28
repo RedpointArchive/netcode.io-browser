@@ -42,6 +42,7 @@ namespace netcode.io.host
         const int TypeGetClientState = 106;
         const int TypeDestroyClient = 107;
         const int TypeClientDestroyed = 108;
+        const int TypeCheckPresence = 109;
 
         const int ResultClientCreated = 201;
         const int ResultSuccess = 202;
@@ -96,6 +97,15 @@ namespace netcode.io.host
                         { 
                             switch (messageType)
                             {
+                                case TypeCheckPresence:
+                                    {
+                                        WriteMessage(new JArray
+                                        {
+                                            JValue.FromObject(ResultSuccess),
+                                            JValue.FromObject(messageId),
+                                        });
+                                        break;
+                                    }
                                 case TypeCreateClient:
                                     {
                                         var id = _random.Next();

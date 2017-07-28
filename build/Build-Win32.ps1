@@ -37,8 +37,9 @@ if (Test-Path $root\netcode.io.host\bin\Release) {
 cp $root\browser\hostapp\manifest.windows.relative.json $root\netcode.io.host\bin\Release\manifest.windows.relative.json
 
 echo "Packaging netcode.io helper..."
+rm -Force $root\netcode.io.wininstall\package.zip
 ZipFiles -zipfilename $root\netcode.io.wininstall\package.zip -sourcedir $root\netcode.io.host\bin\Release
 
 echo "Building netcode.io Windows installer..."
 & "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" /m /p:Configuration=Release netcode.io.wininstall\netcode.io.wininstall.csproj
-
+cp netcode.io.wininstall\bin\Release\netcode.io.wininstall.exe output\NetcodeInstaller.exe
