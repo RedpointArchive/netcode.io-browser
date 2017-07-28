@@ -9,6 +9,6 @@ stage('Build') {
 stage('Build Docker') {
   node('linux-docker') {
     unstash 'demoserver'
-    sh 'docker build .'
+    sh 'ls && docker build .'
   }
 }
