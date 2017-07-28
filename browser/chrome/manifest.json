@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "netcode.io support",
+  "version": "0.1",
+  "description": "Provides netcode.io APIs to websites in Chrome",
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["netcodecs.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "background": {
+    "scripts": ["hostmsg.js"],
+    "persistent": true
+  },
+  "web_accessible_resources": [
+    "netcode.js"
+  ],
+  "permissions": [
+    "nativeMessaging",
+    "tabs",
+    "*://*/*"
+  ]
+}
