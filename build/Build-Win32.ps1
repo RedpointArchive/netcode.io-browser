@@ -33,6 +33,9 @@ echo "Building netcode.io helper..."
 if (Test-Path $root\netcode.io.host\bin\Release) {
   rm -Recurse -Force $root\netcode.io.host\bin\Release
 }
+if (Test-Path "C:\NuGet\nuget.exe") {
+  & "C:\NuGet\nuget.exe" restore
+}
 & "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" /m /p:Configuration=Release netcode.io.host.sln
 cp $root\browser\hostapp\manifest.windows.relative.json $root\netcode.io.host\bin\Release\manifest.windows.relative.json
 
