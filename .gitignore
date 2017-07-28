@@ -5,3 +5,4 @@ packages/
 browser/hostapp/manifest.windows.json
 browser/chrome/chrome.zip
 output/
+netcode.io.wininstall/package.zip
