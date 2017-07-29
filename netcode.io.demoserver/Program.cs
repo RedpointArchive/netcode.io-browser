@@ -111,12 +111,15 @@ namespace netcode.io.demoserver
             while (running)
             {
                 server.Update(time);
-
-                if (server.ClientConnected(0) && packetData != null)
+                
+                for (var clientIndex = 0; clientIndex < NetcodeLibrary.GetMaxClients(); clientIndex++)
                 {
-                    server.SendPacket(0, packetData);
-                    packetData = null;
+                    if (server.ClientConnected(clientIndex) && packetData != null)
+                    {
+                        server.SendPacket(clientIndex, packetData);
+                    }
                 }
+                packetData = null;
 
                 for (var clientIndex = 0; clientIndex < NetcodeLibrary.GetMaxClients(); clientIndex++)
                 {
@@ -127,8 +130,7 @@ namespace netcode.io.demoserver
                         {
                             break;
                         }
-
-                        Console.WriteLine(Encoding.ASCII.GetString(packet));
+                        
                         packetData = packet;
                     }
                 }
