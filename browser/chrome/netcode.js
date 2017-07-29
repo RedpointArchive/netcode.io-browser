@@ -124,7 +124,13 @@ window.netcode = {
     var messageId = _createMessage(function(type, args) {
       window.clearTimeout(handle);
       if (type == _resultSuccess) {
-        callback(null, true);
+        if (args.length >= 1 && args[0] == '0.1.0') {
+          callback(null, true);
+        } else {
+          // Mismatched version, treat as missing so users are
+          // prompted to install it again.
+          callback(null, false);
+        }
       } else {
         callback(new Error(args[0]), null);
       }

@@ -3,12 +3,9 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace netcode.io.host
 {
@@ -18,6 +15,8 @@ namespace netcode.io.host
         static Random _random;
         static BinaryWriter _outWriter;
         static object _writerLock;
+
+        const string HelperVersion = "0.1.0";
 
         class ManagedClient
         {
@@ -103,6 +102,7 @@ namespace netcode.io.host
                                         {
                                             JValue.FromObject(ResultSuccess),
                                             JValue.FromObject(messageId),
+                                            JValue.FromObject(HelperVersion),
                                         });
                                         break;
                                     }

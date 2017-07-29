@@ -35,10 +35,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="netcode.io-csharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\netcode.io.0.1.5\lib\net45\netcode.io-csharp.dll</HintPath>
+      <HintPath>..\packages\netcode.io.1.0.0\lib\net45\netcode.io-csharp.dll</HintPath>
     </Reference>
     <Reference Include="netcodeBinding, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\netcode.io.0.1.5\lib\net45\netcodeBinding.dll</HintPath>
+      <HintPath>..\packages\netcode.io.1.0.0\lib\net45\netcodeBinding.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -61,11 +61,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\netcode.io.0.1.5\build\netcode.io.targets" Condition="Exists('..\packages\netcode.io.0.1.5\build\netcode.io.targets')" />
+  <Import Project="..\packages\netcode.io.1.0.0\build\netcode.io.targets" Condition="Exists('..\packages\netcode.io.1.0.0\build\netcode.io.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\netcode.io.0.1.5\build\netcode.io.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\netcode.io.0.1.5\build\netcode.io.targets'))" />
+    <Error Condition="!Exists('..\packages\netcode.io.1.0.0\build\netcode.io.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\netcode.io.1.0.0\build\netcode.io.targets'))" />
   </Target>
 </Project>
