@@ -113,9 +113,14 @@ namespace netcode.io.host
                                         {
                                             id = _random.Next();
                                         }
+                                        var isIpV6 = false;
+                                        if (messageArray.Count >= 3)
+                                        {
+                                            isIpV6 = messageArray[2].Value<bool>();
+                                        }
                                         _clients[id] = new ManagedClient
                                         {
-                                            client = new Client("::", 0),
+                                            client = new Client(isIpV6 ? "::" : "0.0.0.0", 0),
                                             tickRate = 60,
                                             shouldRun = true,
                                             time = 0,

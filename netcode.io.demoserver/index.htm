@@ -29,6 +29,9 @@
             return new TextDecoder("ascii").decode(buf);
         }
 
+        var packetsSentCount = 0;
+        var lastState = '';
+
         function updateConnectionState(client) {
             client.getClientState(function (err, state) {
                 if (err) {
@@ -37,12 +40,11 @@
                     return;
                 }
 
+                lastState = state;
                 $("#netcode_connection").text(state);
                 window.setTimeout(function () { updateConnectionState(client); }, 100);
             });
         }
-
-        var packetsSentCount = 0;
 
         $(function () {
             window.setTimeout(function() {
@@ -58,7 +60,7 @@
                         $("#netcode_presence").html("<b>Available!</b>");
 
                         $("#netcode_client").text("Creating...");
-                        window.netcode.createClient(function (err, client) {
+                        window.netcode.createClient('__PROTOCOL__', function (err, client) {
                             if (err) {
                                 console.error(err);
                                 $("#netcode_client").text(err.toString());
@@ -82,12 +84,14 @@
                                     $("#netcode_client").text("Connected!");
 
                                     window.setInterval(function () {
-                                        var buf = str2ab("pkt " + packetsSentCount + "! " + (new Date().toUTCString()));
-                                        packetsSentCount++;
-                                        $("#packets_sent_count").text(packetsSentCount);
-                                        client.send(buf, function () {
-                                            // Do nothing
-                                        });
+                                        if (lastState == 'connected') {
+                                            var buf = str2ab("pkt " + packetsSentCount + "! " + (new Date().toUTCString()));
+                                            packetsSentCount++;
+                                            $("#packets_sent_count").text(packetsSentCount);
+                                            client.send(buf, function () {
+                                                // Do nothing
+                                            });
+                                        }
                                     }, 32);
                                 });
                             });

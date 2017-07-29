@@ -21,10 +21,16 @@ namespace netcode.io.demoserver
         };
 
         static bool running = true;
+        
+        static string serverAddress = "127.0.0.1";
 
-        static string listenAddress = "[::]";
+        static string serverPort = "40000";
 
-        static string serverAddress = "[::1]";
+        static string httpAddress = "127.0.0.1";
+
+        static string httpPort = "8080";
+
+        static bool isServerIpv4 = true;
 
         static void Main(string[] args)
         {
@@ -35,20 +41,40 @@ namespace netcode.io.demoserver
                 {
                     nonInteractive = true;
                 }
-                else if (args[i] == "--listen-address")
-                {
-                    listenAddress = args[i + 1];
-                    i++;
-                }
                 else if (args[i] == "--server-address")
                 {
                     serverAddress = args[i + 1];
                     i++;
                 }
+                else if (args[i] == "--server-port")
+                {
+                    serverPort = args[i + 1];
+                    i++;
+                }
+                else if (args[i] == "--http-address")
+                {
+                    httpAddress = args[i + 1];
+                    i++;
+                }
+                else if (args[i] == "--http-port")
+                {
+                    httpPort = args[i + 1];
+                    i++;
+                }
             }
+
+            try
+            {
+                var ip = IPAddress.Parse(serverAddress);
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                {
+                    isServerIpv4 = false;
+                }
+            }
+            catch { }
             
             // Start web server.
-            WebServer ws = new WebServer(SendResponse, "http://*:8080/");
+            WebServer ws = new WebServer(SendResponse, "http://" + httpAddress + ":" + httpPort + "/");
             ws.Run();
 
             // Run netcode.io server in another thread.
@@ -56,7 +82,7 @@ namespace netcode.io.demoserver
             netcodeThread.IsBackground = !nonInteractive;
             netcodeThread.Start();
 
-            Console.WriteLine("netcode.io demo server started, open up http://*:8080/ to try it!");
+            Console.WriteLine("netcode.io demo server started, open up http://" + httpAddress + ":" + httpPort + "/ to try it!");
             if (!nonInteractive)
             {
                 Console.ReadKey();
@@ -73,8 +99,7 @@ namespace netcode.io.demoserver
             double deltaTime = 1.0 / 60.0;
 
             var server = new Server(
-                listenAddress + ":40000",
-                serverAddress + ":40000", 
+                serverAddress + ":" + serverPort,
                 0x1122334455667788L, 
                 _privateKey,
                 0);
@@ -126,7 +151,7 @@ namespace netcode.io.demoserver
                 var indexPath = Path.Combine(new FileInfo(asmPath).DirectoryName, "index.htm");
                 using (var reader = new StreamReader(indexPath))
                 {
-                    return reader.ReadToEnd();
+                    return reader.ReadToEnd().Replace("__PROTOCOL__", isServerIpv4 ? "ipv4" : "ipv6");
                 }
             }
 
@@ -136,7 +161,7 @@ namespace netcode.io.demoserver
                 
                 var clientId = NetcodeLibrary.GetRandomUInt64();
                 var token = NetcodeLibrary.GenerateConnectTokenFromPrivateKey(
-                    new[] { serverAddress + ":40000" },
+                    new[] { serverAddress + ":" + serverPort },
                     30,
                     clientId,
                     0x1122334455667788L,

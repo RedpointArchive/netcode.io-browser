@@ -28,11 +28,14 @@ The API made available to Javascript clients as `window.netcode`. You can check 
 
 `window.netcode` provides one function: `createClient(callback)`:
 
-### window.netcode.createClient(callback)
+### window.netcode.createClient(protocol, callback)
 
 Creates a new netcode.io client which can be used for secure UDP communication using the netcode.io protocol. The callback is of the form `callback(err, client)`. If `err` is set, there was an error creating the client (and `client` will be null). Otherwise `client` is set and `err` is null. The returned client is an instance of `Client`.
 
+`protocol` should be either `ipv4` or `ipv6` and determines what type of server address you can connect to.
+
 **Parameters:**
+- `protocol`: Either `ipv4` or `ipv6`.
 - `callback`: A callback in the form `callback(err, client)` where `err` is either `null` or an instance of `Error`, and `client` is either `null` or an instance of `Client`.
 
 ### window.netcode.isNativeHelperInstalled(callback)

@@ -134,7 +134,7 @@ window.netcode = {
       message: [_typeCheckPresence, messageId]
     }, "*");
   },
-  createClient: function(callback) {
+  createClient: function(protocol, callback) {
     var messageId = _createMessage(function(type, args) {
       if (type == _resultClientCreated) {
         var clientId = args[0];
@@ -186,7 +186,7 @@ window.netcode = {
     });
     window.postMessage({
       type: "netcode.io-send",
-      message: [_typeCreateClient, messageId]
+      message: [_typeCreateClient, messageId, protocol == 'ipv6']
     }, "*");
   },
 }
