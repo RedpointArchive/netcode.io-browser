@@ -6,8 +6,5 @@
                             "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/",
                             "chrome-extension://hpecmifakhimhidjpcpjmihpacijicbd/"
                         ],
-    "allowed_extensions": [
-        "webext@netcode.redpoint.games"
-    ],
     "type":  "stdio"
 }
