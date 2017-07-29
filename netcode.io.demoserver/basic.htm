@@ -55,7 +55,7 @@
 
                     window.netcode.isNativeHelperInstalled(function(err, isInstalled) {
                         if (!isInstalled) {
-                            $("#netcode_presence").html("<b>Missing Helper</b> (<a href=\"https://github.com/RedpointGames/netcode.io-browser/releases/tag/latest\" target=\"_blank\">install the native helper</a>, reload page after install)");
+                            $("#netcode_presence").html("<b>Missing Helper</b> (fix it by going to the <a href=\"/\">home page</a>)");
                             return;
                         }
 
@@ -100,30 +100,7 @@
                         });
                     });
                 } else {
-                    $("#netcode_presence").html("<b>Not Installed</b> (");
-                    
-                    if (chrome && chrome.webstore && chrome.webstore.install && chrome.app) {
-                        if (!chrome.app.isInstalled) {
-                            var presence = $("#netcode_presence");
-                            presence.append(
-                                $("<a></a>")
-                                .attr("href", "https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd")
-                                .attr("target", "_blank")
-                                .click(function(e) {
-                                    chrome.webstore.install(
-                                        "https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd",
-                                        function() {
-                                            // Reload after install.
-                                            location.reload();
-                                        },
-                                        function() {
-                                            e.preventDefault();
-                                        });
-                                })
-                                .text("install the extension for your browser"));        
-                            presence.append(", reload page after install)");
-                        }
-                    }
+                    $("#netcode_presence").html("<b>Not Installed</b> (fix it by going to the <a href=\"/\">home page</a>)");
                 }
             }, 500);
         });
