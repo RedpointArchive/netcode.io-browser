@@ -86,14 +86,16 @@
                         if (!chrome.app.isInstalled) {
                             var ext_install = $("#ext_install");
                             ext_install.click(function (e) {
+                                e.preventDefault();
                                 chrome.webstore.install(
                                     "https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd",
                                     function () {
                                         // Reload after install.
                                         location.reload();
                                     },
-                                    function () {
-                                        e.preventDefault();
+                                    function (e) {
+                                        console.error(e);
+                                        location.href = "https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd";
                                     });
                             });
                         }
