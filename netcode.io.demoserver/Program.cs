@@ -32,6 +32,8 @@ namespace netcode.io.demoserver
 
         static bool isServerIpv4 = true;
 
+        static byte[][] lastPacketMessage;
+
         static void Main(string[] args)
         {
             var nonInteractive = false;
@@ -93,7 +95,7 @@ namespace netcode.io.demoserver
 
         private static void NetcodeServer()
         {
-            NetcodeLibrary.SetLogLevel(NetcodeLogLevel.Debug);
+            NetcodeLibrary.SetLogLevel(NetcodeLogLevel.Info);
 
             double time = 0f;
             double deltaTime = 1.0 / 60.0;
@@ -103,10 +105,10 @@ namespace netcode.io.demoserver
                 0x1122334455667788L, 
                 _privateKey,
                 0);
-
-            byte[] packetData = null;
-
+            
             server.Start(NetcodeLibrary.GetMaxClients());
+
+            lastPacketMessage = new byte[NetcodeLibrary.GetMaxClients()][];
 
             while (running)
             {
@@ -114,12 +116,12 @@ namespace netcode.io.demoserver
                 
                 for (var clientIndex = 0; clientIndex < NetcodeLibrary.GetMaxClients(); clientIndex++)
                 {
-                    if (server.ClientConnected(clientIndex) && packetData != null)
+                    if (server.ClientConnected(clientIndex) && lastPacketMessage[clientIndex] != null)
                     {
-                        server.SendPacket(clientIndex, packetData);
+                        server.SendPacket(clientIndex, lastPacketMessage[clientIndex]);
+                        lastPacketMessage[clientIndex] = null;
                     }
                 }
-                packetData = null;
 
                 for (var clientIndex = 0; clientIndex < NetcodeLibrary.GetMaxClients(); clientIndex++)
                 {
@@ -130,8 +132,8 @@ namespace netcode.io.demoserver
                         {
                             break;
                         }
-                        
-                        packetData = packet;
+
+                        lastPacketMessage[clientIndex] = packet;
                     }
                 }
 
