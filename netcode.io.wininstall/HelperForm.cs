@@ -42,9 +42,16 @@ namespace netcode.io.wininstall
                 {
                     foreach (var entry in archive.Entries)
                     {
-                        entry.ExtractToFile(
-                            Path.Combine(netcodePath, entry.FullName),
-                            true);
+                        try
+                        {
+                            entry.ExtractToFile(
+                                Path.Combine(netcodePath, entry.FullName),
+                                true);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Trace.WriteLine(ex);
+                        }
                     }
                 }
 
