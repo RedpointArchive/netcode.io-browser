@@ -16,21 +16,21 @@ spec:
     spec:
       nodeSelector:
         cloud.google.com/gke-nodepool: high-availability-pool
-      securityContext:
-        runAsNonRoot: true
+      #securityContext:
+      #  runAsNonRoot: true
       automountServiceAccountToken: false
       containers:
       - name: netcode-io-demo-server-http
         image: redpointgames/netcode-demo-server:latest
-        args: [ "--non-interactive", "--listen-address", "0.0.0.0", "--server-address", "104.198.44.162" ]
+        args: [ "--non-interactive", "--server-address", "104.198.44.162", "--http-address", "+" ]
         imagePullPolicy: Always
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 33
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
+        #securityContext:
+        #  runAsNonRoot: true
+        #  runAsUser: 33
+        #  readOnlyRootFilesystem: true
+        #  capabilities:
+        #    drop:
+        #      - ALL
         resources:
           requests:
             cpu: 0m
@@ -66,22 +66,22 @@ spec:
     spec:
       nodeSelector:
         cloud.google.com/gke-nodepool: high-availability-pool
-      securityContext:
-        runAsNonRoot: true
+      #securityContext:
+      #  runAsNonRoot: true
       automountServiceAccountToken: false
       hostNetwork: true
       containers:
       - name: netcode-io-demo-server-udp
         image: redpointgames/netcode-demo-server:latest
-        args: [ "--non-interactive", "--listen-address", "0.0.0.0", "--server-address", "104.198.44.162" ]
+        args: [ "--non-interactive", "--server-address", "104.198.44.162", "--http-address", "+" ]
         imagePullPolicy: Always
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 33
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
+        #securityContext:
+        #  runAsNonRoot: true
+        #  runAsUser: 33
+        #  readOnlyRootFilesystem: true
+        #  capabilities:
+        #    drop:
+        #      - ALL
         resources:
           requests:
             cpu: 0m
