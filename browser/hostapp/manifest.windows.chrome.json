@@ -1,0 +1,10 @@
+﻿{
+    "path":  "C:\\Users\\June\\Documents\\Projects\\netcode.io.host\\netcode.io.host\\bin\\Debug\\netcode.io.host.exe",
+    "description":  "netcode.io helper",
+    "name":  "netcode.io",
+    "allowed_origins":  [
+                            "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/",
+                            "chrome-extension://hpecmifakhimhidjpcpjmihpacijicbd/"
+                        ],
+    "type":  "stdio"
+}

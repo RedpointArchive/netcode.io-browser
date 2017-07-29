@@ -37,7 +37,8 @@ if (Test-Path "C:\NuGet\nuget.exe") {
   & "C:\NuGet\nuget.exe" restore
 }
 & "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" /m /p:Configuration=Release netcode.io.host.sln
-cp $root\browser\hostapp\manifest.windows.relative.json $root\netcode.io.host\bin\Release\manifest.windows.relative.json
+cp $root\browser\hostapp\manifest.windows.relative.chrome.json $root\netcode.io.host\bin\Release\manifest.windows.relative.chrome.json
+cp $root\browser\hostapp\manifest.windows.relative.firefox.json $root\netcode.io.host\bin\Release\manifest.windows.relative.firefox.json
 
 echo "Packaging netcode.io helper..."
 if (Test-Path $root\netcode.io.wininstall\package.zip) {

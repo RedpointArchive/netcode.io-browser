@@ -1,8 +1,8 @@
 Set-Location $PSScriptRoot
 
 $HostPath = Resolve-Path ..\..\netcode.io.host\bin\Debug\netcode.io.host.exe
-$ManifestJsonPath = Resolve-Path manifest.windows.json
-$ManifestJson = @{
+$ManifestChromeJsonPath = "$(pwd)\manifest.windows.chrome.json"
+$ManifestChromeJson = @{
   name = "netcode.io";
   description = "netcode.io helper";
   path = $HostPath.Path;
@@ -11,14 +11,27 @@ $ManifestJson = @{
     "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/",
     "chrome-extension://hpecmifakhimhidjpcpjmihpacijicbd/"
   );
+}
+ConvertTo-Json $ManifestChromeJson | Out-File -Encoding UTF8 $ManifestChromeJsonPath
+$ManifestFirefoxJsonPath = "$(pwd)\manifest.windows.firefox.json"
+$ManifestFirefoxJson = @{
+  name = "netcode.io";
+  description = "netcode.io helper";
+  path = $HostPath.Path;
+  type = "stdio";
   allowed_extensions = @(
     "webext@netcode.redpoint.games"
   );
 }
-ConvertTo-Json $ManifestJson | Out-File -Encoding UTF8 $ManifestJsonPath
+ConvertTo-Json $ManifestFirefoxJson | Out-File -Encoding UTF8 $ManifestFirefoxJsonPath
 
 $RegistryPath = "HKCU:\SOFTWARE\Google\Chrome\NativeMessagingHosts\netcode.io"
 if (!(Test-Path $RegistryPath)) {
   New-Item -ItemType Directory $RegistryPath
 }
-New-ItemProperty -Path $RegistryPath -Name "(Default)" -Value $ManifestJsonPath -Force | Out-Null
+New-ItemProperty -Path $RegistryPath -Name "(Default)" -Value $ManifestChromeJsonPath -Force | Out-Null
+$RegistryPath = "HKCU:\SOFTWARE\Mozilla\NativeMessagingHosts\netcode.io"
+if (!(Test-Path $RegistryPath)) {
+  New-Item -ItemType Directory $RegistryPath
+}
+New-ItemProperty -Path $RegistryPath -Name "(Default)" -Value $ManifestFirefoxJsonPath -Force | Out-Null

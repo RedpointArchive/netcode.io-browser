@@ -54,13 +54,13 @@ namespace netcode.io.wininstall
                     .CreateSubKey("Chrome")
                     .CreateSubKey("NativeMessagingHosts")
                     .CreateSubKey("netcode.io");
-                registryKey.SetValue(null, Path.Combine(netcodePath, "manifest.windows.relative.json"));
+                registryKey.SetValue(null, Path.Combine(netcodePath, "manifest.windows.relative.chrome.json"));
                 registryKey = Registry.CurrentUser
                     .CreateSubKey("Software")
                     .CreateSubKey("Mozilla")
                     .CreateSubKey("NativeMessagingHosts")
                     .CreateSubKey("netcode.io");
-                registryKey.SetValue(null, Path.Combine(netcodePath, "manifest.windows.relative.json"));
+                registryKey.SetValue(null, Path.Combine(netcodePath, "manifest.windows.relative.firefox.json"));
 
                 Thread.Sleep(1000);
             }
