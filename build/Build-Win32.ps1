@@ -26,8 +26,8 @@ function ZipFiles( $zipfilename, $sourcedir )
         $zipfilename, $compressionLevel, $false)
 }
 
-echo "Creating ZIP for Google Chrome..."
-ZipFiles -zipfilename $root\output\GoogleChrome.zip -sourcedir $root\browser\chrome
+echo "Creating Web Extension ZIP..."
+ZipFiles -zipfilename $root\output\WebExtension.zip -sourcedir $root\browser\webext
 
 echo "Building netcode.io helper..."
 if (Test-Path $root\netcode.io.host\bin\Release) {

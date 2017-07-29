@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "netcode.io support",
   "version": "0.1.3",
-  "description": "Provides netcode.io APIs to websites in Chrome",
+  "description": "Provides netcode.io APIs to websites",
   "content_scripts": [
     {
       "matches": ["*://*/*"],
