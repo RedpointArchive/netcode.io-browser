@@ -10,7 +10,10 @@ $ManifestJson = @{
   allowed_origins = @(
     "chrome-extension://fkcdbgdmpjenlkecdjadcpnkchaecbpn/",
     "chrome-extension://hpecmifakhimhidjpcpjmihpacijicbd/"
-  )
+  );
+  allowed_extensions = @(
+    "webext@netcode.redpoint.games"
+  );
 }
 ConvertTo-Json $ManifestJson | Out-File -Encoding UTF8 $ManifestJsonPath
 

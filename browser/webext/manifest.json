@@ -3,6 +3,12 @@
   "name": "netcode.io support",
   "version": "0.1.3",
   "description": "Provides netcode.io APIs to websites",
+  "applications": {
+    "gecko": {
+      "id": "webext@netcode.redpoint.games",
+      "strict_min_version": "42.0"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["*://*/*"],

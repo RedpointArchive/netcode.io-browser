@@ -8,3 +8,4 @@ output/
 netcode.io.wininstall/package.zip
 *.user
 netcode.io.demoserver/.kube/
+netcode.io.wininstall/.vs/

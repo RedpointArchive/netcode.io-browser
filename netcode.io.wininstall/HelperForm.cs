@@ -55,6 +55,12 @@ namespace netcode.io.wininstall
                     .CreateSubKey("NativeMessagingHosts")
                     .CreateSubKey("netcode.io");
                 registryKey.SetValue(null, Path.Combine(netcodePath, "manifest.windows.relative.json"));
+                registryKey = Registry.CurrentUser
+                    .CreateSubKey("Software")
+                    .CreateSubKey("Mozilla")
+                    .CreateSubKey("NativeMessagingHosts")
+                    .CreateSubKey("netcode.io");
+                registryKey.SetValue(null, Path.Combine(netcodePath, "manifest.windows.relative.json"));
 
                 Thread.Sleep(1000);
             }
