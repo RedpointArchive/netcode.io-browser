@@ -159,6 +159,18 @@ namespace netcode.io.demoserver
                 }
             }
 
+            if (request.Url.AbsolutePath == "/basic")
+            {
+                response.ContentType = "text/html";
+
+                var asmPath = Assembly.GetExecutingAssembly().Location;
+                var indexPath = Path.Combine(new FileInfo(asmPath).DirectoryName, "basic.htm");
+                using (var reader = new StreamReader(indexPath))
+                {
+                    return reader.ReadToEnd().Replace("__PROTOCOL__", isServerIpv4 ? "ipv4" : "ipv6");
+                }
+            }
+
             if (request.Url.AbsolutePath == "/token")
             {
                 response.ContentType = "text/plain";

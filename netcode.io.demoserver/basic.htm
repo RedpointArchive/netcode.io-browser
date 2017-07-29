@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>netcode.io from browser test!</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function b64ToBuffer(b64) {
+            var raw = window.atob(b64);
+            var rawLength = raw.length;
+            var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+            for (i = 0; i < rawLength; i++) {
+                array[i] = raw.charCodeAt(i);
+            }
+            return array;
+        }
+
+        function str2ab(str) {
+            var bufView = new Uint8Array(str.length);
+            for (var i = 0, strLen = str.length; i < strLen; i++) {
+                bufView[i] = str.charCodeAt(i);
+            }
+            return bufView;
+        }
+
+        function ab2str(buf) {
+            return new TextDecoder("ascii").decode(buf);
+        }
+
+        var packetsSentCount = 0;
+        var lastState = '';
+
+        function updateConnectionState(client) {
+            client.getClientState(function (err, state) {
+                if (err) {
+                    console.error(err);
+                    $("#netcode_client").text(err.toString());
+                    return;
+                }
+
+                lastState = state;
+                $("#netcode_connection").text(state);
+                window.setTimeout(function () { updateConnectionState(client); }, 100);
+            });
+        }
+
+        $(function () {
+            window.setTimeout(function() {
+                if (window.netcode) {
+                    $("#netcode_presence").html("Checking native helper...");
+
+                    window.netcode.isNativeHelperInstalled(function(err, isInstalled) {
+                        if (!isInstalled) {
+                            $("#netcode_presence").html("<b>Missing Helper</b> (<a href=\"https://github.com/RedpointGames/netcode.io-browser/releases/tag/latest\" target=\"_blank\">install the native helper</a>, reload page after install)");
+                            return;
+                        }
+
+                        $("#netcode_presence").html("<b>Available!</b>");
+
+                        $("#netcode_client").text("Creating...");
+                        window.netcode.createClient('__PROTOCOL__', function (err, client) {
+                            if (err) {
+                                console.error(err);
+                                $("#netcode_client").text(err.toString());
+                                return;
+                            }
+                            client.addEventListener("receive", function (clientId, buffer) {
+                                $("#packet_received").text(ab2str(buffer));
+                            });
+                            window.setTimeout(function () { updateConnectionState(client); }, 100);
+                            $("#netcode_client").text("Created, obtaining token...");
+                            $.get("/token", function (token) {
+                                $("#netcode_client").text("Obtained token, connecting...");
+                                var tokenBuffer = b64ToBuffer(token);
+                                client.connect(tokenBuffer, function (err) {
+                                    if (err) {
+                                        console.error(err);
+                                        $("#netcode_client").text(err.toString());
+                                        return;
+                                    }
+
+                                    $("#netcode_client").text("Connected!");
+
+                                    window.setInterval(function () {
+                                        if (lastState == 'connected') {
+                                            var buf = str2ab("pkt " + packetsSentCount + "! " + (new Date().toUTCString()));
+                                            packetsSentCount++;
+                                            $("#packets_sent_count").text(packetsSentCount);
+                                            client.send(buf, function () {
+                                                // Do nothing
+                                            });
+                                        }
+                                    }, 32);
+                                });
+                            });
+                        });
+                    });
+                } else {
+                    $("#netcode_presence").html("<b>Not Installed</b> (");
+                    
+                    if (chrome && chrome.webstore && chrome.webstore.install && chrome.app) {
+                        if (!chrome.app.isInstalled) {
+                            var presence = $("#netcode_presence");
+                            presence.append(
+                                $("<a></a>")
+                                .attr("href", "https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd")
+                                .attr("target", "_blank")
+                                .click(function(e) {
+                                    chrome.webstore.install(
+                                        "https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd",
+                                        function() {
+                                            // Reload after install.
+                                            location.reload();
+                                        },
+                                        function() {
+                                            e.preventDefault();
+                                        });
+                                })
+                                .text("install the extension for your browser"));        
+                            presence.append(", reload page after install)");
+                        }
+                    }
+                }
+            }, 500);
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">netcode.io</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li class="active"><a href="/basic">Basic Test</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <p>
+                This page tests netcode.io support in your browser.
+            </p>
+            <p>
+                Status of <code>window.netcode</code>: <span id="netcode_presence">...</span>
+            </p>
+            <p>
+                Status of netcode client: <span id="netcode_client">...</span>
+            </p>
+            <p>
+                Status of netcode connection: <span id="netcode_connection">...</span>
+            </p>
+            <p>
+                Packets sent to server: <span id="packets_sent_count">...</span>
+            </p>
+            <p>
+                Last packet received from server: <span id="packet_received">...</span>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
