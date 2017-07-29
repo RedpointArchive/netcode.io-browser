@@ -2,25 +2,28 @@
 
 This repository enables the use of [netcode.io](https://github.com/networkprotocol/netcode.io) via browser extensions, prior to it's adoption in browsers.
 
-**This is super experimental right now!**
-
 ![gif of browser support](https://media.giphy.com/media/100PoL7yGm4Fi0/giphy.gif)
-
-## Installation
-
-For this to work, it requires the installation of both a browser extension and a native application helper which performs the actual netcode.io communication.  The extension uses the native messaging APIs provided in browsers in order to make netcode.io available via the helper.
-
-To try this out in Google Chrome, you'll first need to build the `netcode.io.host.sln` solution in Visual Studio, then run `Install-Windows.ps1` in Powershell, which will install the netcode.io helper into the Windows registry.
-
-After this is done, add the `browser\chrome` directory as an unpacked extension.
-
-The intention is that in the future, the extension will be available in the Chrome Web Store (and extension stores for Edge and Firefox). Upon installation of the extension, it would provide a native installation executable that sets up the helper for the user.
 
 ## Supported Browsers
 
-So far this has been tested in Google Chrome, though it should translate to Edge and Firefox easily via the new WebExtensions specification.
+netcode.io is supported in the following browsers via extensions:
+
+- Google Chrome
+- Firefox (pending extension approval)
 
 Mobile device support is basically impossible until netcode.io support appears in browsers natively, as mobile platforms don't support extensions or native messaging.
+
+## Installation
+
+The easiest way to install netcode.io is to visit [the demo website](https://netcode.redpoint.games/), which will guide you through the setup of netcode.io.
+
+### From Source
+
+For this to work, it requires the installation of both a browser extension and a native application helper which performs the actual netcode.io communication.  The extension uses the native messaging APIs provided in browsers in order to make netcode.io available via the helper.
+
+To try this out in your browser, you'll first need to build the `netcode.io.host.sln` solution in Visual Studio, then run `Install-Windows.ps1` in Powershell, which will install the netcode.io helper into the Windows registry.
+
+After this is done, add the `browser\webext` directory as an unpacked extension.
 
 ## netcode.io API
 
