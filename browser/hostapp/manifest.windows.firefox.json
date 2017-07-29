@@ -3,7 +3,7 @@
     "description":  "netcode.io helper",
     "name":  "netcode.io",
     "allowed_extensions":  [
-                               "webext@netcode.redpoint.games"
+                               "{1af46c0f-6130-426a-b504-1f5b8295a173}"
                            ],
     "type":  "stdio"
 }

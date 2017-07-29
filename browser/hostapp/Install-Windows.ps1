@@ -20,7 +20,7 @@ $ManifestFirefoxJson = @{
   path = $HostPath.Path;
   type = "stdio";
   allowed_extensions = @(
-    "webext@netcode.redpoint.games"
+    "{1af46c0f-6130-426a-b504-1f5b8295a173}"
   );
 }
 ConvertTo-Json $ManifestFirefoxJson | Out-File -Encoding UTF8 $ManifestFirefoxJsonPath
