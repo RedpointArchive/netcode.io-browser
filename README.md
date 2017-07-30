@@ -1,6 +1,6 @@
 # Browser extensions for netcode.io
 
-This repository enables the use of [netcode.io](https://github.com/networkprotocol/netcode.io) via browser extensions, prior to its adoption in browsers.
+This repository enables the use of [netcode.io](https://github.com/networkprotocol/netcode.io) via browser extensions, prior to its adoption in browsers. netcode.io enables the secure use of UDP in web browsers for the purpose of supporting multiplayer HTML5 games. More information on netcode.io can be found [here](https://new.gafferongames.com/post/why_cant_i_send_udp_packets_from_a_browser/).
 
 ![gif of browser support](https://media.giphy.com/media/100PoL7yGm4Fi0/giphy.gif)
 
