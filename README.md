@@ -1,6 +1,6 @@
 # Browser extensions for netcode.io
 
-This repository enables the use of [netcode.io](https://github.com/networkprotocol/netcode.io) via browser extensions, prior to it's adoption in browsers.
+This repository enables the use of [netcode.io](https://github.com/networkprotocol/netcode.io) via browser extensions, prior to its adoption in browsers.
 
 ![gif of browser support](https://media.giphy.com/media/100PoL7yGm4Fi0/giphy.gif)
 
