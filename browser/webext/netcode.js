@@ -7,6 +7,7 @@ var _typeGetClientState = 106;
 var _typeDestroyClient = 107;
 var _typeClientDestroyed = 108;
 var _typeCheckPresence = 109;
+var _typeClientStateChanged = 110;
 var _resultClientCreated = 201;
 var _resultSuccess = 202;
 var _resultError = 203;
@@ -146,6 +147,7 @@ window.netcode = {
         var clientId = args[0];
         _clients[clientId] = {
           _recvCallbacks: [],
+		  _stateChangeCallbacks: [],
           _isDestroyed: false,
           setTickRate: function(tickRate, callback) {
             if (this._isDestroyed) {
@@ -182,6 +184,9 @@ window.netcode = {
             if (type == "receive") {
               this._recvCallbacks.push(callback);
             }
+			else if(type == "stateChange") {
+			  this._stateChangeCallbacks.push(callback);
+			}
           },
         };
         callback(null, _clients[clientId]);
@@ -216,6 +221,15 @@ window.addEventListener("message", function(event) {
       _clients[clientId]._isDestroyed = true;
       delete _clients[clientId];
       // TODO: Fire event before deletion.
+	} else if (resultType == _typeClientStateChanged) {
+      // Client state changed
+	  var clientId = event.data.message[1];
+	  var stateStr = event.data.message[2];
+	  if(_clients[clientId] != undefined) {
+		for (var i = 0; i < _clients[clientId]._stateChangeCallbacks.length; i++) {
+          _clients[clientId]._stateChangeCallbacks[i](clientId, stateStr);
+        }
+	  }
     } else {
       // Received a return value.
       var messageId = event.data.message[1];
