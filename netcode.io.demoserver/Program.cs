@@ -82,7 +82,7 @@ namespace netcode.io.demoserver
             // Run netcode.io server in another thread.
             var netcodeThread = new Thread(NetcodeServer);
             netcodeThread.IsBackground = !nonInteractive;
-            netcodeThread.Start();
+			netcodeThread.Start();
 
             Console.WriteLine("netcode.io demo server started, open up http://" + httpAddress + ":" + httpPort + "/ to try it!");
             if (!nonInteractive)

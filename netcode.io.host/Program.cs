@@ -42,7 +42,7 @@ namespace netcode.io.host
         const int TypeDestroyClient = 107;
         const int TypeClientDestroyed = 108;
         const int TypeCheckPresence = 109;
-		const int TypeClientStateChanged = 110;
+        const int TypeClientStateChanged = 110;
 
         const int ResultClientCreated = 201;
         const int ResultSuccess = 202;
@@ -259,18 +259,18 @@ namespace netcode.io.host
             var id = (int)o;
             var managedClient = _clients[id];
 
-			// keep track of client state so we can notify application of state changes
-			var prevState = managedClient.client.State;
+            // keep track of client state so we can notify application of state changes
+            var prevState = managedClient.client.State;
 			
             while (managedClient.shouldRun)
             {
                 managedClient.client.Update(managedClient.time);
 				
-				if (managedClient.client.State != prevState)
-				{
-					prevState = managedClient.client.State;
-					PostStateChange(id);
-				}
+                if (managedClient.client.State != prevState)
+                {
+                    prevState = managedClient.client.State;
+                    PostStateChange(id);
+                }
 
                 if (managedClient.client.State == ClientState.Connected)
                 {
@@ -313,52 +313,74 @@ namespace netcode.io.host
             managedClient.client.Dispose();
         }
 
-		private static void PostStateChange( int id )
-		{
-			string state;
-			switch (_clients[id].client.State)
-			{
-				case ClientState.Connected:
-					state = "connected";
-					break;
-				case ClientState.ConnectionDenied:
-					state = "connectionDenied";
-					break;
-				case ClientState.ConnectionRequestTimeout:
-					state = "connectionRequestTimeout";
-					break;
-				case ClientState.ConnectionResponseTimeout:
-					state = "connectionResponseTimeout";
-					break;
-				case ClientState.ConnectionTimedOut:
-					state = "connectionTimedOut";
-					break;
-				case ClientState.ConnectTokenExpired:
-					state = "connectTokenExpired";
-					break;
-				case ClientState.Disconnected:
-					state = "disconnected";
-					break;
-				case ClientState.InvalidConnectToken:
-					state = "invalidConnectToken";
-					break;
-				case ClientState.SendingConnectionRequest:
-					state = "sendingConnectionRequest";
-					break;
-				case ClientState.SendingConnectionResponse:
-					state = "sendingConnectionResponse";
-					break;
-				default:
-					state = "unknown";
-					break;
-			}
+        private static void PostStateChange( int id )
+        {
+            string state;
+            switch (_clients[id].client.State)
+            {
+                case ClientState.Connected:
+                    {
+                        state = "connected";
+                        break;
+                    }
+                case ClientState.ConnectionDenied:
+                    {
+                        state = "connectionDenied";
+                        break;
+                    }
+                case ClientState.ConnectionRequestTimeout:
+                    {
+                        state = "connectionRequestTimeout";
+                        break;
+                    }
+                case ClientState.ConnectionResponseTimeout:
+                    {
+                        state = "connectionResponseTimeout";
+                        break;
+                    }
+                case ClientState.ConnectionTimedOut:
+                    {
+                        state = "connectionTimedOut";
+                        break;
+                    }
+                case ClientState.ConnectTokenExpired:
+                    {
+                        state = "connectTokenExpired";
+                        break;
+                    }
+                case ClientState.Disconnected:
+                    {
+                        state = "disconnected";
+                        break;
+                    }
+                case ClientState.InvalidConnectToken:
+                    {
+                        state = "invalidConnectToken";
+                        break;
+                    }
+                case ClientState.SendingConnectionRequest:
+                    {
+                        state = "sendingConnectionRequest";
+                        break;
+                    }
+                case ClientState.SendingConnectionResponse:
+                    {
+                        state = "sendingConnectionResponse";
+                        break;
+                    }
+                default:
+                    {
+                        state = "unknown";
+                        break;
+                    }
+            }
 
-			WriteMessage(new JArray
-			{
-				JValue.FromObject(TypeClientStateChanged),
-				JValue.FromObject(id),
-				JValue.FromObject(state),
-			});
-		}
+            WriteMessage(new JArray
+            {
+                JValue.FromObject(TypeClientStateChanged),
+                JValue.FromObject(id),
+                JValue.FromObject(state),
+            });
+        }
     }
 }
