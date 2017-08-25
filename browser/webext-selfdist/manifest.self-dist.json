@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "netcode.io support (self-dist)",
+  "version": "0.1.5",
+  "description": "Provides netcode.io APIs to websites; this is the version distributed from netcode.redpoint.games",
+  "applications": {
+    "gecko": {
+      "id": "{4279ff57-aad6-4990-bf0b-2010a55ed5d5}",
+      "strict_min_version": "42.0"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["netcodecs.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "background": {
+    "scripts": ["hostmsg.js"],
+    "persistent": true
+  },
+  "web_accessible_resources": [
+    "netcode.js"
+  ],
+  "permissions": [
+    "nativeMessaging",
+    "tabs",
+    "*://*/*"
+  ]
+}

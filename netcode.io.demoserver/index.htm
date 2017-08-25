@@ -75,8 +75,12 @@
                     });
                 } else {
                     var target = "https://chrome.google.com/webstore/detail/hpecmifakhimhidjpcpjmihpacijicbd";
+                    var type = "target=\"_blank\"";
                     if (navigator.userAgent.indexOf("Firefox") > -1) {
-                        target = "https://addons.mozilla.org/en-US/firefox/addon/netcode-io/";
+                        // Use self-distributed version for now.
+                        target = "/netcode-support.xpi";
+                        type = "";
+                        //target = "https://addons.mozilla.org/en-US/firefox/addon/netcode-io/";
                     }
 
                     $("#info").html(
@@ -84,8 +88,8 @@
                         "<p>To add support for netcode.io in your browser, you first need " +
                         "to install the netcode.io extension.</p>" +
                         "<p><a id=\"ext_install\" class=\"btn btn-lg btn-primary\" " +
-                        "href=\"" + target + "\" " +
-                        "target=\"_blank\" role=\"button\">Install extension &raquo;</a>");
+                        "href=\"" + target + "\" " + type + 
+                        " role=\"button\">Install extension &raquo;</a>");
                     
                     if (chrome && chrome.webstore && chrome.webstore.install && chrome.app) {
                         if (!chrome.app.isInstalled) {

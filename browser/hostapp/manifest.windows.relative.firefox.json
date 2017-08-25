@@ -3,7 +3,8 @@
     "description":  "netcode.io helper",
     "name":  "netcode.io",
     "allowed_extensions": [
-        "{1af46c0f-6130-426a-b504-1f5b8295a173}"
+        "{1af46c0f-6130-426a-b504-1f5b8295a173}",
+        "{4279ff57-aad6-4990-bf0b-2010a55ed5d5}"
     ],
     "type":  "stdio"
 }

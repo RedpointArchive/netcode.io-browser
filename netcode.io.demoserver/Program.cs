@@ -145,7 +145,7 @@ namespace netcode.io.demoserver
             server.Dispose();
         }
 
-        public static string SendResponse(HttpListenerRequest request, HttpListenerResponse response)
+        public static Tuple<int, byte[]> SendResponse(HttpListenerRequest request, HttpListenerResponse response)
         {
             if (request.Url.AbsolutePath == "/")
             {
@@ -155,7 +155,7 @@ namespace netcode.io.demoserver
                 var indexPath = Path.Combine(new FileInfo(asmPath).DirectoryName, "index.htm");
                 using (var reader = new StreamReader(indexPath))
                 {
-                    return reader.ReadToEnd().Replace("__PROTOCOL__", isServerIpv4 ? "ipv4" : "ipv6");
+                    return new Tuple<int, byte[]>(200, Encoding.UTF8.GetBytes(reader.ReadToEnd().Replace("__PROTOCOL__", isServerIpv4 ? "ipv4" : "ipv6")));
                 }
             }
 
@@ -167,7 +167,7 @@ namespace netcode.io.demoserver
                 var indexPath = Path.Combine(new FileInfo(asmPath).DirectoryName, "basic.htm");
                 using (var reader = new StreamReader(indexPath))
                 {
-                    return reader.ReadToEnd().Replace("__PROTOCOL__", isServerIpv4 ? "ipv4" : "ipv6");
+                    return new Tuple<int, byte[]>(200, Encoding.UTF8.GetBytes(reader.ReadToEnd().Replace("__PROTOCOL__", isServerIpv4 ? "ipv4" : "ipv6")));
                 }
             }
 
@@ -183,10 +183,24 @@ namespace netcode.io.demoserver
                     0x1122334455667788L,
                     0,
                     _privateKey);
-                return Convert.ToBase64String(token);
+                return new Tuple<int, byte[]>(200, Encoding.UTF8.GetBytes(Convert.ToBase64String(token)));
             }
 
-            return "404 not found";
+            if (request.Url.AbsolutePath == "/netcode-support.xpi")
+            {
+                response.ContentType = "application/x-xpinstall";
+
+                var asmPath = Assembly.GetExecutingAssembly().Location;
+                var xpiPath = Path.Combine(new FileInfo(asmPath).DirectoryName, "netcodeio_support_self_dist-0.1.5-fx.xpi");
+                using (var reader = new FileStream(xpiPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    var b = new byte[reader.Length];
+                    reader.Read(b, 0, b.Length);
+                    return new Tuple<int, byte[]>(200, b);
+                }
+            }
+
+            return new Tuple<int, byte[]>(404, Encoding.UTF8.GetBytes("404 not found"));
         }
     }
 }

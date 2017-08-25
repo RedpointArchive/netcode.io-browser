@@ -9,9 +9,9 @@ namespace netcode.io.demoserver
     public class WebServer
     {
         private readonly HttpListener _listener = new HttpListener();
-        private readonly Func<HttpListenerRequest, HttpListenerResponse, string> _responderMethod;
+        private readonly Func<HttpListenerRequest, HttpListenerResponse, Tuple<int, byte[]>> _responderMethod;
 
-        public WebServer(string[] prefixes, Func<HttpListenerRequest, HttpListenerResponse, string> method)
+        public WebServer(string[] prefixes, Func<HttpListenerRequest, HttpListenerResponse, Tuple<int, byte[]>> method)
         {
             if (!HttpListener.IsSupported)
                 throw new NotSupportedException(
@@ -33,7 +33,7 @@ namespace netcode.io.demoserver
             _listener.Start();
         }
 
-        public WebServer(Func<HttpListenerRequest, HttpListenerResponse, string> method, params string[] prefixes)
+        public WebServer(Func<HttpListenerRequest, HttpListenerResponse, Tuple<int, byte[]>> method, params string[] prefixes)
             : this(prefixes, method) { }
 
         public void Run()
@@ -50,10 +50,10 @@ namespace netcode.io.demoserver
                             var ctx = c as HttpListenerContext;
                             try
                             {
-                                string rstr = _responderMethod(ctx.Request, ctx.Response);
-                                byte[] buf = Encoding.UTF8.GetBytes(rstr);
-                                ctx.Response.ContentLength64 = buf.Length;
-                                ctx.Response.OutputStream.Write(buf, 0, buf.Length);
+                                Tuple<int, byte[]> rstr = _responderMethod(ctx.Request, ctx.Response);
+                                ctx.Response.StatusCode = rstr.Item1;
+                                ctx.Response.ContentLength64 = rstr.Item2.Length;
+                                ctx.Response.OutputStream.Write(rstr.Item2, 0, rstr.Item2.Length);
                             }
                             catch { } // suppress any exceptions
                             finally
