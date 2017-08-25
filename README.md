@@ -9,7 +9,7 @@ This repository enables the use of [netcode.io](https://github.com/networkprotoc
 netcode.io is supported in the following browsers via extensions:
 
 - Google Chrome
-- Firefox (pending extension approval)
+- Firefox 42 and above
 
 Mobile device support is basically impossible until netcode.io support appears in browsers natively, as mobile platforms don't support extensions or native messaging.
 
