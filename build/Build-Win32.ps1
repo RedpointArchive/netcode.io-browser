@@ -30,9 +30,9 @@ echo "Creating Web Extension ZIP (standard)..."
 ZipFiles -zipfilename $root\output\WebExtension.zip -sourcedir $root\browser\webext
 
 echo "Creating Web Extension ZIP (self-dist)..."
-cp -Force $root\webext\hostmsg.js $root\webext-selfdist\
-cp -Force $root\webext\netcode.js $root\webext-selfdist\
-cp -Force $root\webext\netcodecs.js $root\webext-selfdist\
+cp -Force $root\browser\webext\hostmsg.js $root\browser\webext-selfdist\
+cp -Force $root\browser\webext\netcode.js $root\browser\webext-selfdist\
+cp -Force $root\browser\webext\netcodecs.js $root\browser\webext-selfdist\
 ZipFiles -zipfilename $root\output\WebExtension-SelfDist.zip -sourcedir $root\browser\webext-selfdist
 
 echo "Building netcode.io helper..."
