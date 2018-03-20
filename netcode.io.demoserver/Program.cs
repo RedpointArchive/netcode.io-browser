@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetcodeIO.NET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,6 +35,10 @@ namespace netcode.io.demoserver
 
         static byte[][] lastPacketMessage;
 
+        static int maxClients = 128;
+
+        static Random random = new Random();
+
         static void Main(string[] args)
         {
             var nonInteractive = false;
@@ -46,6 +51,12 @@ namespace netcode.io.demoserver
                 else if (args[i] == "--server-address")
                 {
                     serverAddress = args[i + 1];
+
+                    if (serverAddress == "FROM_ENV")
+                    {
+                        serverAddress = Environment.GetEnvironmentVariable("SERVER_ADDRESS");
+                    }
+
                     i++;
                 }
                 else if (args[i] == "--server-port")
@@ -95,54 +106,54 @@ namespace netcode.io.demoserver
 
         private static void NetcodeServer()
         {
-            NetcodeLibrary.SetLogLevel(NetcodeLogLevel.Info);
-
-            double time = 0f;
-            double deltaTime = 1.0 / 60.0;
-
             var server = new Server(
-                serverAddress + ":" + serverPort,
+                32,
+                "0.0.0.0",
+                int.Parse(serverPort),
                 0x1122334455667788L, 
-                _privateKey,
-                0);
-            
-            server.Start(NetcodeLibrary.GetMaxClients());
+                _privateKey);
 
-            lastPacketMessage = new byte[NetcodeLibrary.GetMaxClients()][];
+            var clients = new Dictionary<RemoteClient, byte[]>();
+
+            server.OnClientConnected += (client) =>
+            {
+                clients.Add(client, null);
+            };
+            server.OnClientDisconnected += (client) =>
+            {
+                clients.Remove(client);
+            };
+            server.OnClientMessageReceived += (client, payload, payloadSize) =>
+            {
+                if (!clients.ContainsKey(client))
+                {
+                    clients.Add(client, null);
+                }
+
+                var b = new byte[payloadSize];
+                Array.Copy(payload, b, payloadSize);
+                clients[client] = b;
+            };
+            
+            server.Start();
+
+            lastPacketMessage = new byte[maxClients][];
 
             while (running)
             {
-                server.Update(time);
-                
-                for (var clientIndex = 0; clientIndex < NetcodeLibrary.GetMaxClients(); clientIndex++)
+                foreach (var kv in clients.ToArray())
                 {
-                    if (server.ClientConnected(clientIndex) && lastPacketMessage[clientIndex] != null)
+                    if (kv.Value != null)
                     {
-                        server.SendPacket(clientIndex, lastPacketMessage[clientIndex]);
-                        lastPacketMessage[clientIndex] = null;
+                        server.SendPayload(kv.Key, kv.Value, kv.Value.Length);
+                        clients[kv.Key] = null;
                     }
                 }
 
-                for (var clientIndex = 0; clientIndex < NetcodeLibrary.GetMaxClients(); clientIndex++)
-                {
-                    while (true)
-                    {
-                        var packet = server.ReceivePacket(clientIndex);
-                        if (packet == null)
-                        {
-                            break;
-                        }
-
-                        lastPacketMessage[clientIndex] = packet;
-                    }
-                }
-
-                NetcodeLibrary.Sleep(deltaTime);
-
-                time += deltaTime;
+                Thread.Sleep(1000 / 60);
             }
             
-            server.Dispose();
+            server.Stop();
         }
 
         public static Tuple<int, byte[]> SendResponse(HttpListenerRequest request, HttpListenerResponse response)
@@ -174,15 +185,22 @@ namespace netcode.io.demoserver
             if (request.Url.AbsolutePath == "/token")
             {
                 response.ContentType = "text/plain";
-                
-                var clientId = NetcodeLibrary.GetRandomUInt64();
-                var token = NetcodeLibrary.GenerateConnectTokenFromPrivateKey(
-                    new[] { serverAddress + ":" + serverPort },
-                    30,
-                    clientId,
+
+                var buffer = new byte[sizeof(UInt64)];
+                random.NextBytes(buffer);
+                var clientId = BitConverter.ToUInt64(buffer, 0);
+
+                Console.WriteLine($"Generating connect token for {serverAddress}:{serverPort}");
+                var tokenFactory = new TokenFactory(
                     0x1122334455667788L,
-                    0,
                     _privateKey);
+                var token = tokenFactory.GenerateConnectToken(
+                    new[] { new IPEndPoint(IPAddress.Parse(serverAddress), int.Parse(serverPort)) },
+                    30,
+                    15,
+                    0,
+                    clientId,
+                    new byte[0]);
                 return new Tuple<int, byte[]>(200, Encoding.UTF8.GetBytes(Convert.ToBase64String(token)));
             }
 
