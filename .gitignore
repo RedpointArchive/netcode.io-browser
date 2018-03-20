@@ -10,3 +10,6 @@ netcode.io.wininstall/package.zip
 netcode.io.demoserver/.kube/
 netcode.io.wininstall/.vs/
 /browser/webext-selfdist/*.js
+
+/netcode.io.host/netcode.io.host.exe
+/netcode.io.host/netcode.io.host
