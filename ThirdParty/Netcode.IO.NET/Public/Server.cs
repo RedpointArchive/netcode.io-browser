@@ -198,7 +198,7 @@ namespace NetcodeIO.NET
 
 		#endregion
 
-		public Server(int maxSlots, string address, int port, ulong protocolID, byte[] privateKey)
+		public Server(int maxSlots, int port, ulong protocolID, byte[] privateKey)
 		{
 			this.tickrate = 60;
 
@@ -210,7 +210,7 @@ namespace NetcodeIO.NET
 			this.clientSlots = new RemoteClient[maxSlots];
 			this.encryptionManager = new EncryptionManager(maxSlots);
 
-			this.listenEndpoint = new IPEndPoint(IPAddress.Parse(address), port);
+			this.listenEndpoint = new IPEndPoint(IPAddress.Any, port);
 
 			if (this.listenEndpoint.AddressFamily == AddressFamily.InterNetwork)
 				this.listenSocket = new UDPSocketContext(AddressFamily.InterNetwork);
@@ -226,7 +226,7 @@ namespace NetcodeIO.NET
 			KeyUtils.GenerateKey(this.challengeKey);
 		}
 
-		internal Server(ISocketContext socketContext, int maxSlots, string address, int port, ulong protocolID, byte[] privateKey)
+		internal Server(ISocketContext socketContext, int maxSlots, int port, ulong protocolID, byte[] privateKey)
 		{
 			this.tickrate = 60;
 
@@ -238,7 +238,7 @@ namespace NetcodeIO.NET
 			this.clientSlots = new RemoteClient[maxSlots];
 			this.encryptionManager = new EncryptionManager(maxSlots);
 
-			this.listenEndpoint = new IPEndPoint(IPAddress.Parse(address), port);
+			this.listenEndpoint = new IPEndPoint(IPAddress.Any, port);
 
 			this.listenSocket = socketContext;
 
@@ -699,12 +699,18 @@ namespace NetcodeIO.NET
 			}
 
 			// if this server's public IP is not in the list of endpoints, packet is not valid
+            /*
+             * We run in Docker, so our listen endpoint (0.0.0.0:40000) won't ever appear in the connect
+             * token's IP endpoint (<public IP>:40000). We don't really need this "security", since the
+             * private keypair secures servers anyway.
+             * 
 			bool serverAddressInEndpoints = privateConnectToken.ConnectServers.Any(x => x.Endpoint.CompareEndpoint(this.listenEndpoint, this.Port));
 			if (!serverAddressInEndpoints)
 			{
 				log("Server address not listen in token", NetcodeLogLevel.Debug);
 				return;
 			}
+            */
 
 			// if a client from packet source IP / port is already connected, ignore the packet
 			if (clientSlots.Any(x => x != null && x.RemoteEndpoint.Equals(sender)))

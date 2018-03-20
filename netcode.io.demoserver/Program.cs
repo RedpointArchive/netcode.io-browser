@@ -56,6 +56,13 @@ namespace netcode.io.demoserver
                     {
                         serverAddress = Environment.GetEnvironmentVariable("SERVER_ADDRESS");
                     }
+                    else if (serverAddress == "FROM_PUBLIC")
+                    {
+                        using (var wc = new WebClient())
+                        {
+                            serverAddress = wc.DownloadString("https://api.ipify.org/");
+                        }
+                    }
 
                     i++;
                 }
@@ -108,10 +115,10 @@ namespace netcode.io.demoserver
         {
             var server = new Server(
                 32,
-                "0.0.0.0",
                 int.Parse(serverPort),
                 0x1122334455667788L, 
                 _privateKey);
+            server.LogLevel = NetcodeLogLevel.Debug;
 
             var clients = new Dictionary<RemoteClient, byte[]>();
 
@@ -129,7 +136,7 @@ namespace netcode.io.demoserver
                 {
                     clients.Add(client, null);
                 }
-
+                
                 var b = new byte[payloadSize];
                 Array.Copy(payload, b, payloadSize);
                 clients[client] = b;
@@ -196,8 +203,8 @@ namespace netcode.io.demoserver
                     _privateKey);
                 var token = tokenFactory.GenerateConnectToken(
                     new[] { new IPEndPoint(IPAddress.Parse(serverAddress), int.Parse(serverPort)) },
-                    30,
-                    15,
+                    60,
+                    60,
                     0,
                     clientId,
                     new byte[0]);

@@ -22,12 +22,7 @@ spec:
       containers:
       - name: netcode-io-demo-server-http
         image: redpointgames/netcode-demo-server:latest
-        args: [ "--non-interactive", "--server-address", "FROM_ENV", "--http-address", "+" ]
-        env:
-        - name: SERVER_ADDRESS
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
+        args: [ "--non-interactive", "--server-address", "FROM_PUBLIC", "--http-address", "+" ]
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
@@ -88,12 +83,7 @@ spec:
       containers:
       - name: netcode-io-demo-server-udp
         image: redpointgames/netcode-demo-server:latest
-        args: [ "--non-interactive", "--server-address", "FROM_ENV", "--http-address", "+" ]
-        env:
-        - name: SERVER_ADDRESS
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
+        args: [ "--non-interactive", "--server-address", "FROM_PUBLIC", "--http-address", "+" ]
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
