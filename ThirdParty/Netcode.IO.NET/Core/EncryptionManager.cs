@@ -186,7 +186,9 @@ namespace NetcodeIO.NET
 					(encryptionMappings[i].ExpireTime < 0.0 || encryptionMappings[i].ExpireTime >= time))
 				{
 					encryptionMappings[i].LastAccessTime = time;
-					return i;
+                    // Hotfix, sometimes expiry time wasn't being updated and this caused clients to disconnect..
+                    encryptionMappings[i].ExpireTime = time + Defines.NETCODE_TIMEOUT_SECONDS;
+                    return i;
 				}
 			}
 
