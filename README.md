@@ -21,7 +21,25 @@ The easiest way to install netcode.io is to visit [the demo website](https://net
 
 For this to work, it requires the installation of both a browser extension and a native application helper which performs the actual netcode.io communication.  The extension uses the native messaging APIs provided in browsers in order to make netcode.io available via the helper.
 
-To try this out in your browser, you'll first need to build the `netcode.io.host.sln` solution in Visual Studio, then run `Install-Windows.ps1` in Powershell, which will install the netcode.io helper into the Windows registry.
+To try this out in your browser, first build the netcode.io.host helper:
+
+#### 1. Get dependencies
+```bash
+go get github.com/wirepair/netcode
+```
+
+#### 2. Platform specific build instructions
+
+* `go build` - for the current OS
+* `env GOOS=windows GOARCH=amd64 go build` - to build for Windows (linux-style to set environment variables)
+* `env GOOS=linux GOARCH=amd64 go build` - to build for Linux (linux-style to set environment variables)
+* `env GOOS=darwin GOARCH=amd64 go build` - to build for Mac (linux-style to set environment variables)
+
+#### 3. Install (run this from the command-line)
+
+`./netcode.io.host`
+
+This should run with no errors, and install itself as a native messaging extension.
 
 After this is done, add the `browser\webext` directory as an unpacked extension.
 
