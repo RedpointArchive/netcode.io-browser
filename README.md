@@ -130,7 +130,6 @@ The primary goals for this project currently are:
 
 - Stabilizing the implementation currently provided here
 - Making the extension available in Edge and Firefox
-- Making the native helper executable available for Linux and Mac
 - Getting the extension into the relevant extension web stores
 - Making the installation of the extension and native helper easy enough for players to install it upon prompting from HTML5 games
 
