@@ -15,8 +15,6 @@ Mobile device support is basically impossible until netcode.io support appears i
 
 ## Installation
 
-The easiest way to install netcode.io is to visit [the demo website](https://netcode.redpoint.games/), which will guide you through the setup of netcode.io.
-
 ### From Source
 
 For this to work, it requires the installation of both a browser extension and a native application helper which performs the actual netcode.io communication.  The extension uses the native messaging APIs provided in browsers in order to make netcode.io available via the helper.
